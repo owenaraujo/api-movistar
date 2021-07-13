@@ -1,37 +1,46 @@
-export function save(req, res) {
-    const datos = req.body
-    console.log(datos);
+import clientes from "../models/clientes";
+export async function save(req, res) {
+  try {
+    const datos = req.body;
+    const cliente = await clientes.find({ dni: datos.dni });
+    if (cliente.length != 0)return res.json({ value: "usuario ya registrado", status: null });
+    await new clientes(datos).save();
+    res.json({ value: " cliente registrado con exito", status: true });
+  } catch (e) {
+    res.json({ value: "todo ha salido exitosamente mal", status: false });
+  }
 }
-export function editar(req,res) {
-const {id}= req.params
-const datos = req.body
-console.log(datos, id);
+export async function editar(req, res) {
+try {
+  const { id } = req.params;
+  const datos = req.body;
+await clientes.findByIdAndUpdate(id , datos)
+res.json({value: 'cliente editado con exito', status: true})
+} catch (error) {
+res.json({value: 'todo ha salido exitosamente mal', status:false})
+  
 }
-export function boorar(req, res) {
-    const {id} = req.body
-    const status= {status: false}
-    console.log(status, id);
 }
-export function activar(req,res) {
-    const {id}= req.params
-    const status= {status: true}
-    console.log(status, id);
+export async function desactivar(req, res) {
+  const { id } = req.body;
+  const status = { status: false };
+  console.log(status, id);
+}
+export async function activar(req, res) {
+  const { id } = req.params;
+  const status = { status: true };
+  console.log(status, id);
+}
 
+export async function buscarId(req, res) {
+  const { id } = req.params;
+  console.log(id);
 }
-export function filtroFecha(req,res) {
-    const {inicio, fin}= req.params
-    console.log(inicio, fin);
-}
-export function limit(req, res) {
-    const {count}= req.params
-    console.log(count);
-}
-export function borrar(req, res) {
-    const  {id}= req.params
-    const status= {status: true}
-    console.log(status, id);
-}
-export function agregar(req, res) {
-    const datos = req.body
-    console.log(datos);
+export async function buscar(req, res) {
+ try {
+   const data = await clientes.find().populate('user_id')
+   res.json(data)
+ } catch (error) {
+   res.json({value: 'todo ha salido satisfacctoriamente mal'})
+ }
 }

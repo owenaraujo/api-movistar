@@ -1,13 +1,14 @@
 import {Router} from 'express'
-import {save, editar} from '../controller/clientes'
+import {save, editar, buscar, buscarId, activar, desactivar} from '../controller/clientes'
 const route = Router()
 route.get('/default',(req,res)=>{
     res.json('default')
 })
-route.get('/', save, editar)
-route.post('/')
-route.put('/:id')
-route.delete('/:id')
-route.get('/:id')
-route.get('/limit/:count')
+route.get('/', buscar)
+route.post('/', save)
+route.post('/:id',editar)
+
+route.delete('/:id', desactivar)
+route.delete('/activar/:id', activar)
+route.get('/:id',buscarId)
 export default route
