@@ -22,14 +22,26 @@ res.json({value: 'todo ha salido exitosamente mal', status:false})
 }
 }
 export async function desactivar(req, res) {
-  const { id } = req.body;
+  try {
+    const { id } = req.params;
   const status = { status: false };
-  console.log(status, id);
+  await clientes.findByIdAndUpdate(id , status)
+  res.json({value: "cliente desactivado con exito", status: true})
+  } catch (error) {
+    res.json({value:"todo ha salido satisfactoriamente mal", status: false
+  })
+  }
 }
 export async function activar(req, res) {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
   const status = { status: true };
-  console.log(status, id);
+  await clientes.findByIdAndUpdate(id , status)
+  res.json({value: "cliente activado con exito", status: true})
+  } catch (error) {
+    res.json({value:"todo ha salido satisfactoriamente mal", status: false
+  })
+  }
 }
 
 export async function buscarId(req, res) {
