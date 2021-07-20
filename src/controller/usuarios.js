@@ -9,7 +9,7 @@ export async function login(req, res) {
     if (!data) {
       res.json({ value: "usuario no encontrado", status: null });
     } else {
-      console.log(data)
+    
       if(data.status === false) return res.json({value:"usuario desactivado", status: false})
 
       let token = false;
@@ -38,7 +38,6 @@ export async function save(req, res) {
       
     }
   } catch (e) {
-    console.log(e)
     res.json({value: "todo ha salido satistactoriamente mal ", status: false});
 
   }
@@ -66,7 +65,6 @@ export async function editar(req, res) {
       
     }
   } catch (e) {
-    console.log(e)
     res.json({value: "todo ha salido satistactoriamente mal ", status: false});
 
   }
@@ -81,11 +79,9 @@ res.json({value : " usuario activado con exito" , status : true})
 }
 export function filtroFecha(req, res) {
   const { inicio, fin } = req.params;
-  console.log(inicio, fin);
 }
 export function limit(req, res) {
   const { count } = req.params;
-  console.log(count);
 }
 export async function desactivar(req, res) {
   const { id } = req.params;
@@ -106,7 +102,13 @@ export async function buscarRoles(req, res) {
   res.json(rol);
 }
 export async function buscarId(req, res) {
+ try {
   const {id}= req.params
   const usuario = await usuarios.findById(id,{password:0}).populate('rol');
+   
+   if(!usuario) return res.json({value: 'usuario no encontrado', status:null})
   res.json(usuario);
+ } catch (error) {
+   res.json({value: 'todo ha salido satisfactoriamente mal', status:false})
+ }
 }

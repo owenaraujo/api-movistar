@@ -1,37 +1,39 @@
-export function save(req, res) {
-    const datos = req.body
-    console.log(datos);
-}
-export function editar(req,res) {
-const {id}= req.params
-const datos = req.body
-console.log(datos, id);
-}
-export function boorar(req, res) {
-    const {id} = req.body
-    const status= {status: false}
-    console.log(status, id);
-}
-export function activar(req,res) {
-    const {id}= req.params
-    const status= {status: true}
-    console.log(status, id);
+import system from "../models/system"
 
+
+
+
+export async function crear(req, res) {
+    try { 
+        const datos = req.body
+        const val=  new system(datos)
+        console.log(val)
+await val.save()
+        res.json({value: "guardado con exito", status: true})
+        
+    } catch (error) {
+        console.log(error)
+        res.json({value:"todo ha salido satisfactoriamete mal", status: false})
+    }
 }
-export function filtroFecha(req,res) {
-    const {inicio, fin}= req.params
-    console.log(inicio, fin);
+export async function editar(req, res) {
+    try {
+        const {id}= req.params
+        const datos = req.body
+    await system.findByIdAndUpdate(id,datos)
+    res.json({value: "editado con exito", status: true})
+    } catch (error) {
+        console.log(error)
+        res.json({value:"todo ha salido satisfactoriamete mal", status: false})
+        
+    }
 }
-export function limit(req, res) {
-    const {count}= req.params
-    console.log(count);
-}
-export function borrar(req, res) {
-    const  {id}= req.params
-    const status= {status: true}
-    console.log(status, id);
-}
-export function agregar(req, res) {
-    const datos = req.body
-    console.log(datos);
+
+export async function buscar(req, res) {
+    try {
+        const data = await system.findOne()
+        res.json(data)
+    } catch (error) {
+        res.json({value:"todo ha salido satisfactoriamete mal", status: false})
+    }
 }

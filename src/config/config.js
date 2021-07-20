@@ -7,7 +7,7 @@ import proveedores from '../routes/proveedores'
 import productos from '../routes/productos'
 import usuarios from '../routes/usuarios'
 import ventas from '../routes/ventas'
-import system from '../routes/ventas'
+import system from '../routes/sistema'
 const app = express()
 
 app.use(cors())

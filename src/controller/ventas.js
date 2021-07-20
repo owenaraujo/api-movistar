@@ -1,37 +1,77 @@
-export function save(req, res) {
-    const datos = req.body
-    console.log(datos);
-}
-export function editar(req,res) {
-const {id}= req.params
-const datos = req.body
-console.log(datos, id);
-}
-export function boorar(req, res) {
-    const {id} = req.body
-    const status= {status: false}
-    console.log(status, id);
-}
-export function activar(req,res) {
-    const {id}= req.params
-    const status= {status: true}
-    console.log(status, id);
+import ventas from "../models/ventas";
+import productos from "../models/productos";
 
+export async function save(req, res) {
+  try {
+    const datos = req.body;
+    let status = await Promise.all(
+      datos.productos.map(async function (item) {
+        let producto = await productos.findById(item.producto_id);
+        let cantidad = producto.cantidad - item.cantidad;
+        if (cantidad < 0) return false;
+        else {
+          return true;
+        }
+      })
+    );
+    if (status.indexOf(false) != -1) {
+      return res.json({
+        value: "cantidad de producto no disponible",
+        status: false,
+      });
+    }
+
+    await Promise.all(
+      datos.productos.map(async function (item) {
+        let producto = await productos.findById(item.producto_id);
+        let cantidad = producto.cantidad - item.cantidad;
+        await productos.findByIdAndUpdate(item.producto_id, {
+          cantidad: cantidad,
+        });
+      })
+    );
+    const factura = await ventas.countDocuments()
+    datos.factura = factura +1
+    const id = await new ventas(datos).save();
+    const data = await ventas
+      .findById(id._id)
+      .populate({ path: "productos.producto_id" })
+      .populate("cliente_id")
+      .populate("user_id");
+    res.json({ value: "venta hecha con exito", status: true, data });
+  } catch (error) {
+    res.json({ value: "todo ha salido satisfactoriamente mal", status: false });
+  }
 }
-export function filtroFecha(req,res) {
-    const {inicio, fin}= req.params
-    console.log(inicio, fin);
+export function editar(req, res) {
+  const { id } = req.params;
+  const datos = req.body;
+  console.log(datos, id);
+}
+
+export function activar(req, res) {
+  const { id } = req.params;
+  const status = { status: true };
+  console.log(status, id);
+}
+export function filtroFecha(req, res) {
+  const { inicio, fin } = req.params;
+  console.log(inicio, fin);
 }
 export function limit(req, res) {
-    const {count}= req.params
-    console.log(count);
+  const { count } = req.params;
+  console.log(count);
 }
 export function borrar(req, res) {
-    const  {id}= req.params
-    const status= {status: true}
-    console.log(status, id);
+  const { id } = req.params;
+  const status = { status: true };
+  console.log(status, id);
 }
-export function agregar(req, res) {
-    const datos = req.body
-    console.log(datos);
+export async function get(req, res) {
+  const data = await ventas
+    .find()
+    .populate("user_id")
+    .populate("cliente_id")
+    .populate({ path: "productos.producto_id" });
+  res.json(data);
 }
