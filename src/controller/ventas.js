@@ -30,8 +30,8 @@ export async function save(req, res) {
         });
       })
     );
-    const factura = await ventas.countDocuments()
-    datos.factura = factura +1
+    const factura = await ventas.countDocuments();
+    datos.factura = factura + 1;
     const id = await new ventas(datos).save();
     const data = await ventas
       .findById(id._id)
@@ -74,4 +74,20 @@ export async function get(req, res) {
     .populate("cliente_id")
     .populate({ path: "productos.producto_id" });
   res.json(data);
+}
+export async function getLimit(req, res) {
+  let { limit, page } = req.params;
+  limit = parseInt(limit);
+  page = parseInt(page);
+  const count = await ventas.countDocuments()
+  let pagination = { start: (page - 1) * limit, count: limit };
+  const data = await ventas
+    .find()
+    .skip(pagination.start)
+    .limit(pagination.count)
+    .populate("user_id")
+    .populate("cliente_id")
+    .populate({ path: "productos.producto_id" });
+  res.json({ventas : data , count : count});
+
 }

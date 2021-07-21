@@ -1,10 +1,11 @@
 import {Router} from 'express'
-import{save, get} from "../controller/ventas"
+import{save, get, getLimit} from "../controller/ventas"
 const route = Router()
 route.get('/default',(req,res)=>{
     res.json('default')
 })
 
+route.get('/:limit/:page', getLimit)
 route.get('/', get)
 route.post('/',save)
 route.get('/:inicio/:fin')
