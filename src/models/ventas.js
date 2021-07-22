@@ -9,7 +9,7 @@ const venta = new Schema({
       precio: { type: Number },
       imei: [{value : {type: Number} }],
       cantidad: { type: Number },
-      iva: { type: Number },
+      iva: { type: Number, default: 0 },
       producto_id: { type: Schema.Types.ObjectId, ref: "productos" },
     },
   ],

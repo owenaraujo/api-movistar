@@ -1,4 +1,5 @@
 import express from 'express'
+import path from "path"
 import cors from 'cors'
 import morgan from 'morgan'
 import info from "../../package.json"
@@ -15,6 +16,8 @@ app.use(morgan("dev"))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 import {buscar} from './config.roles'
+app.use(express.static(path.join(__dirname, "../public")));
+
 buscar()
 app.get('/',(req, res) =>{
     console.log('jola')
