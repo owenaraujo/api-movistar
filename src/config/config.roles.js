@@ -2,12 +2,17 @@ import roles from "../models/roles";
 import {createUSer} from './config.user'
 
 export async function buscar(){
-  const rol = await roles.find();
+  try {
+    const rol = await roles.find();
 
   if (rol.length <= 0) crearRoles()
   else{ console.log('roles ya creados exitosamente')}
+  } catch (error) {
+    console.log('hubo un error en la busqueda de roles')
+  }
 };
 async function crearRoles() {
+ try {
   const admin = {
     nombre: "administrador",
     grado: 1,
@@ -24,5 +29,8 @@ async function crearRoles() {
   await  new roles(vendedor).save()
   await  new roles(usuario).save()
 createUSer()
+ } catch (error) {
+   console.log('hubo un errror en la creacion de roles')
+ }
 }
 

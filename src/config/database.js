@@ -12,7 +12,8 @@ import config from './env'
         )
         console.log('conectado a '+ con.connection.name);
     } catch (error) {
-        console.log(error);
+        console.log('base de datos no iniciada');
+        console.log(error.reason);
         
     }
 })()
